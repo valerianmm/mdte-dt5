@@ -1,0 +1,10 @@
+services:
+  imu-simulator:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.simulator
+    container_name: imu-simulator
+    depends_on:
+      - mosquitto
+    networks:
+      - default
