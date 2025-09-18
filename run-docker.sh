@@ -14,8 +14,6 @@ for f in \
   docker-compose.volumes.yml \
   docker-compose.mqtt.yml \
   docker-compose.spark.yml \
-  # docker-compose.simulator.yml
-
 do
   COMPOSE_FILES="$COMPOSE_FILES -f $COMPOSE_DIR/$f"
 done
