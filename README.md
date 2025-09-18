@@ -15,9 +15,9 @@ docker compose version
 
 ### Run the Docker containers
 **Windows**
-Usage in PowerShell (calling Git Bash explicitly):
+Usage in Git Bash (calling Git Bash explicitly):
 ```
-bash run-docker.sh
+./run-docker.sh
 ```
 
 **Linux/macOS**
