@@ -1,0 +1,42 @@
+# Byte-compiled / cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Editor/OS files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Docker related
+docker/mosquitto/data/
+docker/mosquitto/log/
+*.db
+*.log
+
+# Spark / Kafka / Postgres volumes (if mounted locally)
+volumes/
+data/
+tmp/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Python packaging
+.eggs/
+*.egg
+.Python
+
+# PlatformIO build files
+wearable/.pio/
+wearable/.pioenvs/
+wearable/.piolibdeps/
+wearable/.clang_complete
+wearable/.gcc-flags.json
+
+docker/mosquitto/data/mosquitto.db
+docker/mosquitto/log/mosquitto.log
