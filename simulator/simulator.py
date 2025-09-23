@@ -15,14 +15,14 @@ def generate_sensor_data():
     data = {
         "timestamp": round(time.time(), 2),
         "gyroscope": {
-            "x": round(random.uniform(10, 100), 2),
-            "y": round(random.uniform(10, 100), 2),
-            "z": round(random.uniform(10, 100), 2)
+            "x": round(random.uniform(-250, 250), 2),
+            "y": round(random.uniform(-250, 250), 2),
+            "z": round(random.uniform(-250, 250), 2)
         },
         "accelerometer": {
-            "x": round(random.uniform(10, 100), 2),
-            "y": round(random.uniform(10, 100), 2),
-            "z": round(random.uniform(10, 100), 2)
+            "x": round(random.uniform(-2, 2), 2),
+            "y": round(random.uniform(-2, 2), 2),
+            "z": round(random.uniform(-2, 2), 2)
         }
     }
     return data
