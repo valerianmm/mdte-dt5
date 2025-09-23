@@ -14,6 +14,7 @@ for f in \
   docker-compose.volumes.yml \
   docker-compose.mqtt.yml \
   docker-compose.spark.yml \
+  docker-compose.simulator.yml
 do
   COMPOSE_FILES="$COMPOSE_FILES -f $COMPOSE_DIR/$f"
 done
@@ -61,7 +62,8 @@ case "${1:-}" in
     ;;
   *)
     echo "❌ Unknown command: $1"
-    echo "Usage: $0 [up|down|restart|pause|unpause|ps|build|logs]"
+     echo "Usage: $0 [up|down|restart|pause|unpause|ps|build|logs]"
+     echo "Simulator service is included by default."
     exit 1
     ;;
 esac
