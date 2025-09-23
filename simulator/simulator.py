@@ -5,7 +5,7 @@ import paho.mqtt.client as mqtt
 
 MQTT_BROKER = "mosquitto"
 MQTT_PORT = 1883
-MQTT_TOPIC = "wearable/simulator"
+MQTT_TOPIC = "arduino/imu"
 
 client = mqtt.Client()
 client.connect(MQTT_BROKER, MQTT_PORT, 60)
@@ -14,12 +14,12 @@ def generate_sensor_data():
     # Simulate 3-axis gyroscope and accelerometer, rounded to 2 decimal places
     data = {
         "timestamp": round(time.time(), 2),
-        "gyroscope": {
+        "gym": {
             "x": round(random.uniform(-250, 250), 2),
             "y": round(random.uniform(-250, 250), 2),
             "z": round(random.uniform(-250, 250), 2)
         },
-        "accelerometer": {
+        "acc": {
             "x": round(random.uniform(-2, 2), 2),
             "y": round(random.uniform(-2, 2), 2),
             "z": round(random.uniform(-2, 2), 2)

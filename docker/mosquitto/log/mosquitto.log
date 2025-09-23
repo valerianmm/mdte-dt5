@@ -269,3 +269,9 @@
 1758617260: New client connected from 172.18.0.8:37001 as auto-E1A472DF-205C-FF2E-B9C4-7C66C96192CB (p2, c1, k60).
 1758617295: New connection from ::1:43622 on port 1883.
 1758617295: New client connected from ::1:43622 as auto-8075F216-BDFE-DE0D-68D6-611B119E62C8 (p2, c1, k60).
+1758638647: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1758638647: Client auto-8075F216-BDFE-DE0D-68D6-611B119E62C8 has exceeded timeout, disconnecting.
+1758638647: Client auto-E1A472DF-205C-FF2E-B9C4-7C66C96192CB has exceeded timeout, disconnecting.
+1758638648: New connection from ::1:56642 on port 1883.
+1758638648: New client connected from ::1:56642 as auto-7D738FC6-5075-1952-97B5-DB9AFD8C65C8 (p2, c1, k60).
+1758638652: Client auto-7D738FC6-5075-1952-97B5-DB9AFD8C65C8 disconnected.
