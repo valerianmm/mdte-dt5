@@ -38,5 +38,8 @@ wearable/.piolibdeps/
 wearable/.clang_complete
 wearable/.gcc-flags.json
 
-docker/mosquitto/data/mosquitto.db
-docker/mosquitto/log/mosquitto.log
+# Mosquitto runtime data
+docker/mosquitto/data/
+docker/mosquitto/log/
+*.db
+*.log

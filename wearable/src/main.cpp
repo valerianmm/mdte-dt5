@@ -1,38 +1,54 @@
-#include <Arduino.h>
-#include <ArduinoBLE.h>
+#include <Wire.h>
+#include "Modulino.h"
+
+ModulinoMovement movement;  // IMU instance
 
 void setup() {
-  Serial.begin(9600);
-  while (!Serial); // Wait for Serial to be ready
+  // Start Serial Monitor
+  Serial.begin(115200);
+  while (!Serial);
 
-  if (!BLE.begin()) {
-    Serial.println("Starting BLE failed!");
-    while (1);
+  // Initialize I2C bus
+  Modulino.begin();
+
+  // Initialize IMU sensor
+  if (!movement.begin()) {
+    Serial.println("IMU initialization failed!");
+    while (1);  // Stop here if IMU not found
   }
-
-  // Set device name
-  BLE.setLocalName("wearable-33");
-  BLE.advertise(); // Start advertising so laptop can find it
-
-  Serial.println("BLE device active, waiting for connections...");
+  Serial.println("IMU initialized successfully.");
 }
 
 void loop() {
-  BLEDevice central = BLE.central(); // Check if a central device (laptop) is connected
+  // Check if new data is available
+  if (movement.available()) {
+    movement.update(); // Read fresh data
 
-  if (central) {
-    Serial.print("Connected to: ");
-    Serial.println(central.address());
+    // Get acceleration (m/s²)
+    float ax = movement.getX();
+    float ay = movement.getY();
+    float az = movement.getZ();
 
-    // While connected, print RSSI every second
-    while (central.connected()) {
-      int rssi = central.rssi(); // Get signal strength
-      Serial.print("RSSI: ");
-      Serial.print(rssi);
-      Serial.println(" dBm");
-      delay(1000);
-    }
+    // Get gyroscope data (dps - degrees per second)
+    float gx = movement.getRoll();
+    float gy = movement.getPitch();
+    float gz = movement.getYaw();
 
-    Serial.println("Disconnected");
+    // Print data
+    Serial.print("Accel (m/s²): X=");
+    Serial.print(ax);
+    Serial.print(" Y=");
+    Serial.print(ay);
+    Serial.print(" Z=");
+    Serial.print(az);
+
+    Serial.print(" | Gyro (dps): Roll=");
+    Serial.print(gx);
+    Serial.print(" Pitch=");
+    Serial.print(gy);
+    Serial.print(" Yaw=");
+    Serial.println(gz);
   }
+
+  delay(100); // Small delay to avoid flooding Serial
 }
