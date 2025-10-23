@@ -43,3 +43,7 @@ docker/mosquitto/data/
 docker/mosquitto/log/
 *.db
 *.log
+
+# Jupyter Notebook
+jupyter-collection/data-collection/data/
+jupyter-collection/imu-test/data/
