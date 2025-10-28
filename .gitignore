@@ -45,5 +45,5 @@ docker/mosquitto/log/
 *.log
 
 # Jupyter Notebook
-jupyter-collection/data-collection/data/
+# jupyter-collection/data-collection/data/
 jupyter-collection/imu-test/data/
