@@ -18,7 +18,6 @@ docker/mosquitto/log/
 
 # Spark / Kafka / Postgres volumes (if mounted locally)
 volumes/
-data/
 tmp/
 
 # Build artifacts
