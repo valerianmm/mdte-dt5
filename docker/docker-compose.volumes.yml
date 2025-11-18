@@ -1,7 +1,0 @@
-volumes:
-  kafka-data:
-  pgdata:
-  pgadmin-data:
-  airflow_logs:
-  airflow_postgres:
-  airflow_dags:

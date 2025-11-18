@@ -12,6 +12,7 @@ set ARGS=
 if "%~1"=="" goto end_parse
 if "%~1"=="-sim" (
     set WITH_SIMULATOR=true
+    set COMPOSE_PROFILES=simulator
     shift
 ) else (
     set ARGS=%ARGS% %1
@@ -20,24 +21,8 @@ if "%~1"=="-sim" (
 goto parse_args
 :end_parse
 
-rem Compose files folder
-set COMPOSE_DIR=./docker
-
-rem Build the -f chain dynamically
-set COMPOSE_FILES=
-for %%f in (
-    docker-compose.base.yml
-    docker-compose.volumes.yml
-    docker-compose.mqtt.yml
-    docker-compose.spark.yml
-) do (
-    set COMPOSE_FILES=!COMPOSE_FILES! -f !COMPOSE_DIR!/%%f
-)
-
-rem Add simulator compose file if enabled
-if "%WITH_SIMULATOR%"=="true" (
-    set COMPOSE_FILES=!COMPOSE_FILES! -f !COMPOSE_DIR!/docker-compose.simulator.yml
-)
+rem Single compose file
+set COMPOSE_FILE=docker/docker-compose.base.yml
 
 rem Extract first argument
 for /f "tokens=1*" %%a in ("%ARGS%") do (
@@ -63,42 +48,42 @@ if "%WITH_SIMULATOR%"=="true" (
 ) else (
     echo Running without simulator...
 )
-docker compose %COMPOSE_FILES% up -d
+docker compose -f %COMPOSE_FILE% up -d
 goto :eof
 
 :down
 echo Stopping stack...
-docker compose %COMPOSE_FILES% down
+docker compose -f %COMPOSE_FILE% down
 goto :eof
 
 :restart
 echo Restarting stack (fresh, volumes wiped^)...
-docker compose %COMPOSE_FILES% down -v
-docker compose %COMPOSE_FILES% up -d
+docker compose -f %COMPOSE_FILE% down -v
+docker compose -f %COMPOSE_FILE% up -d
 goto :eof
 
 :pause
 echo Pausing all containers...
-docker compose %COMPOSE_FILES% pause
+docker compose -f %COMPOSE_FILE% pause
 goto :eof
 
 :unpause
 echo Unpausing all containers...
-docker compose %COMPOSE_FILES% unpause
+docker compose -f %COMPOSE_FILE% unpause
 goto :eof
 
 :ps
-docker compose %COMPOSE_FILES% ps
+docker compose -f %COMPOSE_FILE% ps
 goto :eof
 
 :build
 echo Building services...
-docker compose %COMPOSE_FILES% build %REMAINING_ARGS%
+docker compose -f %COMPOSE_FILE% build %REMAINING_ARGS%
 goto :eof
 
 :logs
 echo Showing logs...
-docker compose %COMPOSE_FILES% logs %REMAINING_ARGS%
+docker compose -f %COMPOSE_FILE% logs %REMAINING_ARGS%
 goto :eof
 
 :unknown

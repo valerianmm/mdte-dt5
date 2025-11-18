@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-# Move into script directory (so it works regardless of where you run it)
+# Move into script directory
 cd "$(dirname "$0")"
 
 # Parse flags
@@ -19,28 +19,17 @@ for arg in "$@"; do
   esac
 done
 
-# Compose files folder
-COMPOSE_DIR="./docker"
-
-# Build the -f chain dynamically
-COMPOSE_FILES=""
-for f in \
-  docker-compose.base.yml \
-  docker-compose.volumes.yml \
-  docker-compose.mqtt.yml \
-  docker-compose.spark.yml
-do
-  COMPOSE_FILES="$COMPOSE_FILES -f $COMPOSE_DIR/$f"
-done
-
-# Add simulator compose file if enabled
+# Set simulator profile if enabled
 if [ "$WITH_SIMULATOR" = true ]; then
-  COMPOSE_FILES="$COMPOSE_FILES -f $COMPOSE_DIR/docker-compose.simulator.yml"
+  export COMPOSE_PROFILES=simulator
 fi
 
-# Helper: run docker compose with all files
+# Compose file
+COMPOSE_FILE="docker/docker-compose.base.yml"
+
+# Helper: run docker compose
 dc() {
-  docker compose $COMPOSE_FILES "$@"
+  docker compose -f $COMPOSE_FILE "$@"
 }
 
 # Commands
