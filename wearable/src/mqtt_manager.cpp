@@ -2,6 +2,7 @@
 #include "wifi_manager.h"
 #include "logger.h"
 #include "credentials.h"
+#include "imu_manager.h"   // get IMU_BUFFER_ROWS, imuBuffer, imuTail, etc.
 #include <PubSubClient.h>
 #include <WiFiS3.h>
 
@@ -12,7 +13,7 @@
 
 static WiFiClient wifiClient;
 static PubSubClient mqttClient(wifiClient);
-static char payload[800];
+static char payload[512];   // reduced from 800 to lower RAM usage
 unsigned long lastSend = 0;
 
 void mqttConnect() {
@@ -42,12 +43,13 @@ void mqttPublishSamples(IMUData *samples, int count) {
     IMUData &d = samples[i];
     payload[idx++] = '[';
     idx += sprintf(payload + idx, "%lu,", d.t);
-    dtostrf(d.ax, 0, 3, numbuf); idx += sprintf(payload + idx, "%s,", numbuf);
-    dtostrf(d.ay, 0, 3, numbuf); idx += sprintf(payload + idx, "%s,", numbuf);
-    dtostrf(d.az, 0, 3, numbuf); idx += sprintf(payload + idx, "%s,", numbuf);
-    dtostrf(d.gx, 0, 3, numbuf); idx += sprintf(payload + idx, "%s,", numbuf);
-    dtostrf(d.gy, 0, 3, numbuf); idx += sprintf(payload + idx, "%s,", numbuf);
-    dtostrf(d.gz, 0, 3, numbuf); idx += sprintf(payload + idx, "%s", numbuf);
+    idx += sprintf(payload + idx, "%lu,", (unsigned long)d.msgId);
+    dtostrf(d.ax, 0, 2, numbuf); idx += sprintf(payload + idx, "%s,", numbuf);
+    dtostrf(d.ay, 0, 2, numbuf); idx += sprintf(payload + idx, "%s,", numbuf);
+    dtostrf(d.az, 0, 2, numbuf); idx += sprintf(payload + idx, "%s,", numbuf);
+    dtostrf(d.gx, 0, 2, numbuf); idx += sprintf(payload + idx, "%s,", numbuf);
+    dtostrf(d.gy, 0, 2, numbuf); idx += sprintf(payload + idx, "%s,", numbuf);
+    dtostrf(d.gz, 0, 2, numbuf); idx += sprintf(payload + idx, "%s", numbuf);
     payload[idx++] = ']';
     if (i < count - 1) payload[idx++] = ',';
   }
@@ -64,7 +66,7 @@ void mqttSendBuffer() {
   IMUData samples[USER_BATCH_SIZE];
   for (int i = 0; i < USER_BATCH_SIZE; i++) {
     samples[i] = imuBuffer[imuTail];
-    imuTail = (imuTail + 1) % 500;
+    imuTail = (imuTail + 1) % IMU_BUFFER_ROWS;
   }
   mqttPublishSamples(samples, USER_BATCH_SIZE);
 }
