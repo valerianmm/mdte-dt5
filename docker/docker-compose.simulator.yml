@@ -1,0 +1,17 @@
+services:
+  simulator:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.simulator
+    container_name: simulator
+    depends_on:
+      - mosquitto
+    restart: unless-stopped
+    volumes:
+      - ../simulator:/app
+    networks:
+      - mqtt_network  
+
+networks:
+  mqtt_network:
+    external: true  
