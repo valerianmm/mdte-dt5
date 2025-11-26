@@ -88,30 +88,24 @@ services:
       - ../jupyter-notebook/data-collection/data/ai-model/model_utils.py:/app/ai_model_utils.py:ro
       - ../jupyter-notebook/data-collection/data/ai-model/best_xgb_model.joblib:/app/best_xgb_model.joblib:ro
       - ../jupyter-notebook/data-collection/data/ai-model/scaler.joblib:/app/scaler.joblib:ro
-  # WhatsApp Alert Service
-  whatsapp-alert:
+  # Telegram Alert Service
+  telegram-alert:
     build:
-      context: ./whatsapp-alert
-    container_name: whatsapp-alert
+      context: ./telegram-alert
+      dockerfile: Dockerfile
+    container_name: telegram-alert
     environment:
       - MQTT_BROKER=mosquitto
       - MQTT_PORT=1883
-      - MQTT_TOPIC=fallsensor/+/alert
+      - MQTT_TOPIC=fallsensor/predictor/alert
       - MQTT_QOS=1
-      - CONFIDENCE_THRESHOLD=0.0
-      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:-}
-      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN:-}
-      - TWILIO_WHATSAPP_FROM=${TWILIO_WHATSAPP_FROM:-}
-      - DEFAULT_TO=${DEFAULT_TO:-whatsapp:+31612345678}
+      - TELEGRAM_BOT_TOKEN=8356603237:AAFrMgKbnfYsakMhJlIGc6tBrGWxB8Ix-vY
+      - TELEGRAM_CHAT_ID=505555650
       - HTTP_PORT=5555
     depends_on:
       - mosquitto
-    ports:
-      - "5555:5555"
     networks:
       - mqtt_network
-    volumes:
-      - ./whatsapp-alert:/app
 
   # Test replay: publish fall CSV samples over MQTT at ~27 Hz
   replay-sender:

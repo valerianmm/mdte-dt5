@@ -40,7 +40,7 @@ SCALER_PATH = Path(os.getenv("SCALER_PATH", "/app/scaler.joblib"))
 
 # Thresholding / debounce to reduce false positives
 MIN_PROBABILITY = float(os.getenv("MIN_PROBABILITY", "0.70"))
-REQUIRED_CONSECUTIVE = int(os.getenv("REQUIRED_CONSECUTIVE", "2"))
+REQUIRED_CONSECUTIVE = int(os.getenv("REQUIRED_CONSECUTIVE", "4"))
 CLEAR_COOLDOWN_SECONDS = float(os.getenv("CLEAR_COOLDOWN_SECONDS", "5.0"))
 LOG_PUBLISH = os.getenv("LOG_PUBLISH", "false").lower() == "true"
 EVENT_COOLDOWN_SECONDS = float(os.getenv("EVENT_COOLDOWN_SECONDS", "10.0"))

@@ -1,0 +1,31 @@
+﻿version: "3.8"
+services:
+  mqtt:
+    image: eclipse-mosquitto:2.0
+    container_name: local-mosquitto
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto-data:/mosquitto/data
+    ports:
+      - "1883:1883"
+
+  whatsapp-alert:
+    build: .
+    container_name: whatsapp-alert
+    environment:
+      - MQTT_BROKER=mqtt
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=fallsensor/+/alert
+      - MQTT_QOS=1
+      - CONFIDENCE_THRESHOLD=0.0
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:-}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN:-}
+      - TWILIO_WHATSAPP_FROM=${TWILIO_WHATSAPP_FROM:-}
+      - DEFAULT_TO=${DEFAULT_TO:-"whatsapp:+31612345678"}
+      - HTTP_PORT=5000
+    depends_on:
+      - mqtt
+    ports:
+      - "5000:5000"
+volumes:
+  mosquitto-data:
