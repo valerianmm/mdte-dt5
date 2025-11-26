@@ -1,0 +1,91 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: iotdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - mqtt_network
+
+  # pgAdmin (PostgreSQL Web UI)  http://localhost:5050/
+  pgadmin:
+    image: elestio/pgadmin:REL-9_8
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin@mail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - mqtt_network
+
+  # Mosquitto MQTT Broker // mosquitto_sub -v -h localhost -p 1883 -t '#'
+  mosquitto:
+    image: eclipse-mosquitto:2.0.22
+    container_name: mosquitto
+    ports:
+      - "1883:1883"
+      - "9002:9002"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    networks:
+      - mqtt_network
+
+  # Simulator Service (optional) 
+  simulator:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.simulator
+    container_name: simulator
+    depends_on:
+      - mosquitto
+    restart: unless-stopped
+    volumes:
+      - ../simulator:/app
+    networks:
+      - mqtt_network
+    profiles: ["simulator"] 
+
+  # MQTT to PostgreSQL Ingestor Service
+  ingestor:
+    build: ../mqtt-to-postgres
+    container_name: mqtt_postgres_ingestor
+    depends_on:
+      - postgres
+      - mosquitto 
+    networks:
+      - mqtt_network
+
+  # Fetch Recent Data Service
+  fetch-service:
+    build: ../fetch-service
+    container_name: fetch_service
+    depends_on:
+      - postgres
+    networks:
+      - mqtt_network
+
+
+# Network
+networks:
+  mqtt_network:
+    driver: bridge
+
+# Volumes
+volumes:
+  pgdata:
+  pgadmin-data:
+
