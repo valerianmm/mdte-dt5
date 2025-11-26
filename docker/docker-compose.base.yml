@@ -28,38 +28,6 @@ services:
     volumes:    
       - pgadmin-data:/var/lib/pgadmin
 
-  # # Apache Kafka
-  # kafka:
-  #   image: apache/kafka-native:4.0.1-rc2
-  #   container_name: kafka
-  #   environment:
-  #     KAFKA_NODE_ID: 1
-  #     KAFKA_PROCESS_ROLES: broker,controller
-  #     KAFKA_LISTENERS: PLAINTEXT://localhost:9092,CONTROLLER://localhost:9093
-  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-  #     KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-  #     KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
-  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  #     KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-  #     KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-  #     KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-  #     KAFKA_NUM_PARTITIONS: 3
-
-  # # Kafdrop - Kafka UI Dashboard
-  # kafdrop:
-  #   image: obsidiandynamics/kafdrop:4.2.0
-  #   container_name: kafdrop
-  #   ports:
-  #     - "19000:9000"
-  #   environment:
-  #     KAFKA_BROKERCONNECT: "kafka:9092"
-  #     JVM_OPTS: "-Xms32M -Xmx128M"
-  #   depends_on:
-  #     - kafka
-  #   networks:
-  #     - mqtt_network
-
 networks:
   mqtt_network:
     driver: bridge

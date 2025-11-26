@@ -24,8 +24,8 @@ if [ "$WITH_SIMULATOR" = true ]; then
   export COMPOSE_PROFILES=simulator
 fi
 
-# Compose file
-COMPOSE_FILE="docker/docker-compose.base.yml"
+# Compose file (full stack)
+COMPOSE_FILE="docker/docker-compose.yml"
 
 # Helper: run docker compose
 dc() {

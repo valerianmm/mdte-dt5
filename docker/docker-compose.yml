@@ -68,15 +68,72 @@ services:
       - mosquitto 
     networks:
       - mqtt_network
+    volumes:
+      - ../mqtt-to-postgres:/app
 
   # Fetch Recent Data Service
   fetch-service:
-    build: ../fetch-service
+    build:
+      context: ..
+      dockerfile: fetch-service/Dockerfile
     container_name: fetch_service
+    environment:
+      - LOG_PUBLISH=true
     depends_on:
       - postgres
     networks:
       - mqtt_network
+    volumes:
+      - ../fetch-service:/app
+      - ../jupyter-notebook/data-collection/data/ai-model/model_utils.py:/app/ai_model_utils.py:ro
+      - ../jupyter-notebook/data-collection/data/ai-model/best_xgb_model.joblib:/app/best_xgb_model.joblib:ro
+      - ../jupyter-notebook/data-collection/data/ai-model/scaler.joblib:/app/scaler.joblib:ro
+  # WhatsApp Alert Service
+  whatsapp-alert:
+    build:
+      context: ./whatsapp-alert
+    container_name: whatsapp-alert
+    environment:
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=fallsensor/+/alert
+      - MQTT_QOS=1
+      - CONFIDENCE_THRESHOLD=0.0
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:-}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN:-}
+      - TWILIO_WHATSAPP_FROM=${TWILIO_WHATSAPP_FROM:-}
+      - DEFAULT_TO=${DEFAULT_TO:-whatsapp:+31612345678}
+      - HTTP_PORT=5555
+    depends_on:
+      - mosquitto
+    ports:
+      - "5555:5555"
+    networks:
+      - mqtt_network
+    volumes:
+      - ./whatsapp-alert:/app
+
+  # Test replay: publish fall CSV samples over MQTT at ~27 Hz
+  replay-sender:
+    build:
+      context: ..
+      dockerfile: tests/Dockerfile.replay
+    container_name: replay_sender
+    environment:
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=imu/data
+      - SAMPLE_RATE_HZ=27
+      # Override to use a different CSV path inside the container if needed
+      # - CSV_PATH=/app/fall.csv
+    depends_on:
+      - mosquitto
+    networks:
+      - mqtt_network
+    volumes:
+      - ../tests/fall_replay_sender.py:/app/fall_replay_sender.py:ro
+      - ../jupyter-notebook/data-collection/data/test_1_20251024/test_1_falling_12_125samples_5s.csv:/app/fall.csv:ro
+      - ../jupyter-notebook/data-collection/data/test_1_20251024/test_1_walking_9_144samples_5s.csv:/app/walk.csv:ro
 
 
 # Network
@@ -88,4 +145,3 @@ networks:
 volumes:
   pgdata:
   pgadmin-data:
-

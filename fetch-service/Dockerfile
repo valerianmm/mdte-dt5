@@ -2,8 +2,15 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY fetch_recent_data.py /app/
+# Install runtime deps for inference + MQTT + Postgres
+# Pin to training-time versions to avoid pickle/sklearn/xgboost compatibility warnings.
+RUN pip install --no-cache-dir \
+    psycopg2-binary \
+    paho-mqtt \
+    numpy \
+    scikit-learn==1.6.1 \
+    xgboost==3.1.2 \
+    joblib
 
-RUN pip install psycopg2-binary
-
-CMD ["python", "fetch_recent_data.py"]
+# Default command; Python code will be bind-mounted at runtime
+CMD ["python", "predict_and_alert.py"]

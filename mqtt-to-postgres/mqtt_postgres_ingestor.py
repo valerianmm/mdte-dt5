@@ -1,24 +1,30 @@
 import ast
+import os
 import psycopg2
 import paho.mqtt.client as mqtt
 
 # ─── MQTT Config ─────────────────────────────────────────────
-MQTT_BROKER = "mosquitto"   # Docker service name
-MQTT_PORT = 1883
-MQTT_TOPIC = "imu/data"
+MQTT_BROKER = os.getenv("MQTT_BROKER", "mosquitto")   # Docker service name
+MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
+MQTT_TOPIC = os.getenv("MQTT_TOPIC", "imu/data")
 
 # ─── PostgreSQL Config ───────────────────────────────────────
-import psycopg2
+PG_HOST = os.getenv("PG_HOST", "postgres")
+PG_PORT = int(os.getenv("PG_PORT", "5432"))
+PG_DB = os.getenv("PG_DB", "iotdata")
+PG_USER = os.getenv("PG_USER", "postgres")
+PG_PASSWORD = os.getenv("PG_PASSWORD", "password")
 
 conn = psycopg2.connect(
-    host="localhost",
-    port=5432,
-    database="iotdata",
-    user="postgres",
-    password="password"
+    host=PG_HOST,
+    port=PG_PORT,
+    database=PG_DB,
+    user=PG_USER,
+    password=PG_PASSWORD,
 )
-print("Connected!", conn)
-conn.close()
+conn.autocommit = True
+cursor = conn.cursor()
+print(f"Connected to Postgres at {PG_HOST}:{PG_PORT}")
 
 
 # MATCHES your schema exactly:
@@ -72,9 +78,6 @@ def on_message(client, userdata, msg):
                 print("❌ SQL error:", sql_error)
                 print("Attempted tuple:", tuple(s))
                 print("SQL:", INSERT_SQL)
-
-        conn.commit()
-        print("✔ COMMIT OK")
 
     except Exception as e:
         print("❌ GENERAL ERROR:", e)

@@ -9,7 +9,7 @@
 #define MODE_CONTINUOUS                 1 // buffered periodic send
 #define MODE_TEST                       2 // benchmarking and tests
 #define MODE_STREAMING                  3 // fixed frequency (25Hz) streaming
-#define MODE_STR4MING_FAST              4 // max-rate streaming (no delay control)
+#define MODE_STREAMING_FAST              4 // max-rate streaming (no delay control)
 #define MODE_TEST_NO_CALIBRATION        5 // TC-01 test sampling before calibration
 #define MODE_TEST_WITH_CALIBRATION      6 // TC-01 test sampling after calibration
 #define MODE_TEST_SAMPLE_IMU            7 // TC-02
@@ -17,7 +17,7 @@
 #define MODE_TEST_TEST_MQTT             9 // TC-04
 
 
-#define MODE                           1
+#define MODE                           MODE_STREAMING_FAST
 
 // ─── Streaming configuration ────────────────────────────────
 #define STREAM_FREQ_HZ     25               

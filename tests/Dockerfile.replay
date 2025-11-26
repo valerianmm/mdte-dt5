@@ -1,0 +1,11 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy replay script and a default fall CSV
+COPY tests/fall_replay_sender.py /app/
+COPY jupyter-notebook/data-collection/data/test_1_20251024/test_1_falling_12_125samples_5s.csv /app/fall.csv
+
+RUN pip install --no-cache-dir paho-mqtt pandas
+
+CMD ["python", "fall_replay_sender.py"]

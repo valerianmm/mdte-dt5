@@ -21,8 +21,8 @@ if "%~1"=="-sim" (
 goto parse_args
 :end_parse
 
-rem Single compose file
-set COMPOSE_FILE=docker/docker-compose.base.yml
+rem Single compose file (full stack)
+set COMPOSE_FILE=docker/docker-compose.yml
 
 rem Extract first argument
 for /f "tokens=1*" %%a in ("%ARGS%") do (
