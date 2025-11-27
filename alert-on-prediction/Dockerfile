@@ -13,4 +13,4 @@ RUN pip install --no-cache-dir \
     joblib
 
 # Default command; Python code will be bind-mounted at runtime
-CMD ["python", "predict_and_alert.py"]
+CMD ["python", "alert_on_prediction.py"]

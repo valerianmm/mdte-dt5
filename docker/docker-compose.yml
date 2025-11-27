@@ -62,7 +62,7 @@ services:
   # MQTT to PostgreSQL Ingestor Service
   ingestor:
     build: ../mqtt-to-postgres
-    container_name: mqtt_postgres_ingestor
+    container_name: mqtt-postgres-ingestor
     depends_on:
       - postgres
       - mosquitto 
@@ -75,8 +75,8 @@ services:
   fetch-service:
     build:
       context: ..
-      dockerfile: fetch-service/Dockerfile
-    container_name: fetch_service
+      dockerfile: alert-on-prediction/Dockerfile
+    container_name: alert-on-prediction
     environment:
       - LOG_PUBLISH=true
     depends_on:
@@ -112,7 +112,7 @@ services:
     build:
       context: ..
       dockerfile: tests/Dockerfile.replay
-    container_name: replay_sender
+    container_name: replay-sender
     environment:
       - MQTT_BROKER=mosquitto
       - MQTT_PORT=1883
