@@ -71,8 +71,8 @@ services:
     volumes:
       - ../mqtt-to-postgres:/app
 
-  # Fetch Recent Data Service
-  fetch-service:
+  # Alert-on-prediction Service
+  alert-on-prediction:
     build:
       context: ..
       dockerfile: alert-on-prediction/Dockerfile
@@ -81,10 +81,11 @@ services:
       - LOG_PUBLISH=true
     depends_on:
       - postgres
+      - mosquitto
     networks:
       - mqtt_network
     volumes:
-      - ../fetch-service:/app
+      - ../alert-on-prediction:/app
       - ../jupyter-notebook/data-collection/data/ai-model/model_utils.py:/app/ai_model_utils.py:ro
       - ../jupyter-notebook/data-collection/data/ai-model/best_xgb_model.joblib:/app/best_xgb_model.joblib:ro
       - ../jupyter-notebook/data-collection/data/ai-model/scaler.joblib:/app/scaler.joblib:ro
